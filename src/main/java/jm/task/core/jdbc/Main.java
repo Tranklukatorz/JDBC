@@ -37,10 +37,8 @@ public class Main {
 
         System.out.println();
 
-        List<User> newListUsers = myTabInBd.getAllUsers();
-        for (User usr: newListUsers) {
-            System.out.println(usr);
-        }
+        myTabInBd.getAllUsers().forEach(System.out::println);;
+
 
         myTabInBd.createUsersTable();
         myTabInBd.dropUsersTable();

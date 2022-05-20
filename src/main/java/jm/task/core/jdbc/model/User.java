@@ -18,6 +18,12 @@ public class User {
     @Column
     private Byte age;
 
+    @Override
+    public String toString() {
+        return String.format("ID - %-5s Фамилия - %-12s Имя - %-12s Возраст %d",
+                getId(), getLastName(), getName(), getAge());
+    }
+
     public User() {
 
     }
