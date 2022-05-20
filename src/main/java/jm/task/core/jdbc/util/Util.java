@@ -1,5 +1,6 @@
 package jm.task.core.jdbc.util;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,7 +12,6 @@ public class Util {
     private static final String USR = "adm";
     private static final String PASS = "1234";
     private Util(){
-
     }
 
     public static Connection letsConnect(){
@@ -28,22 +28,15 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
-    public static void clouse(Statement stat, Connection con){
-        if (con != null){
-            try {
-                if (stat != null) {
-                    stat.close();
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } finally {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+    public static void clouse(AutoCloseable... obj){
+       for (AutoCloseable item : obj) {
+           if (item != null) {
+               try {
+                   item.close();
+               } catch (Exception ignored) {
+               }
+           }
+       }
 
     }
 }

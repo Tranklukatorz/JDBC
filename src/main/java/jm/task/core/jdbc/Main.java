@@ -6,17 +6,6 @@ import jm.task.core.jdbc.service.UserServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-
-     Создание таблицы User(ов)
-     Добавление 4 User(ов) в таблицу с данными на свой выбор. После каждого добавления должен быть вывод в консоль ( User с именем – name добавлен в базу данных )
-     Получение всех User из базы и вывод в консоль ( должен быть переопределен toString в классе User)
-     Очистка таблицы User(ов)
-     Удаление таблицы
-
- */
-
-
 public class Main {
     public static void main(String[] args) {
 
@@ -31,7 +20,6 @@ public class Main {
         myTabInBd.createUsersTable();
         for(User user : myAllUser){
             myTabInBd.saveUser(user.getName(), user.getLastName(), user.getAge());
-            //Из задания не совсем понятно в каком месте организовывать именно этот вывод
             System.out.printf("User с именем – %s добавлен в базу данных\n", user.getName());
         }
 
