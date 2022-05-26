@@ -17,15 +17,16 @@ public class Main {
         myAllUser.add(new User("Petr", "Vasechkin", (byte)17));
         myAllUser.add(new User("Darya", "Subbotina", (byte)32));
 
-//        userService.createUsersTable();
-//        for(User user : myAllUser){
-//            userService.saveUser(user.getName(), user.getLastName(), user.getAge());
-//            System.out.printf("User с именем – %s добавлен в базу данных\n", user.getName());
-//        }
+        userService.createUsersTable();
+        for(User user : myAllUser){
+            userService.saveUser(user.getName(), user.getLastName(), user.getAge());
+            System.out.printf("User с именем – %s добавлен в базу данных\n", user.getName());
+        }
 
         System.out.println();
 
         userService.getAllUsers().forEach(System.out::println);
-//        userService.cleanUsersTable();
+        userService.cleanUsersTable();
+        userService.dropUsersTable();
     }
 }
