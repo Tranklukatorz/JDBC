@@ -25,10 +25,7 @@ public class Main {
 
         System.out.println();
 
-        myTabInBd.getAllUsers().forEach(System.out::println);;
+        myTabInBd.getAllUsers().forEach(System.out::println);
 
-
-        myTabInBd.createUsersTable();
-        myTabInBd.dropUsersTable();
     }
 }
