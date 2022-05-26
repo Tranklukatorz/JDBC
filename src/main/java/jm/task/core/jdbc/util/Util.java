@@ -10,10 +10,10 @@ public class Util {
     private static final String URL = "jdbc:mysql://localhost:3306/test";
     private static final String USR = "adm";
     private static final String PASS = "1234";
-    private Util(){
+    private Util() {
     }
 
-    public static Connection getConnect() {
+    public static Connection getConnection() {
         try {
             return DriverManager.getConnection(URL, USR, PASS);
         } catch (SQLException e) {
@@ -27,15 +27,5 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
-    public static void connectClose(AutoCloseable... obj) {
-       for (AutoCloseable item : obj) {
-           if (item != null) {
-               try {
-                   item.close();
-               } catch (Exception ignored) {
-               }
-           }
-       }
 
-    }
 }

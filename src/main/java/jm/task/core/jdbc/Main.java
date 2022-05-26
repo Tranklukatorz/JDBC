@@ -9,7 +9,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        UserServiceImpl myTabInBd = new UserServiceImpl();
+        UserServiceImpl userService = new UserServiceImpl();
 
         List<User> myAllUser = new ArrayList<>();
         myAllUser.add(new User("Masha", "Petrova", (byte)23));
@@ -17,15 +17,15 @@ public class Main {
         myAllUser.add(new User("Petr", "Vasechkin", (byte)17));
         myAllUser.add(new User("Darya", "Subbotina", (byte)32));
 
-        myTabInBd.createUsersTable();
-        for(User user : myAllUser){
-            myTabInBd.saveUser(user.getName(), user.getLastName(), user.getAge());
-            System.out.printf("User с именем – %s добавлен в базу данных\n", user.getName());
-        }
+//        userService.createUsersTable();
+//        for(User user : myAllUser){
+//            userService.saveUser(user.getName(), user.getLastName(), user.getAge());
+//            System.out.printf("User с именем – %s добавлен в базу данных\n", user.getName());
+//        }
 
         System.out.println();
 
-        myTabInBd.getAllUsers().forEach(System.out::println);
-
+        userService.getAllUsers().forEach(System.out::println);
+//        userService.cleanUsersTable();
     }
 }

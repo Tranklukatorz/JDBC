@@ -11,12 +11,12 @@ public class UserDaoJDBCImpl implements UserDao {
     private Connection conn;
     private Statement statement;
     private PreparedStatement pstatment;
-
+    private ResultSet resultSet;
 
 
     public void createUsersTable() {
 
-        conn = Util.getConnect();
+        conn = Util.getConnection();
         statement = Util.getStatement(conn);
         try {
             statement.execute("CREATE TABLE IF NOT EXISTS User (" +
@@ -27,13 +27,13 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            Util.connectClose(statement, conn);
+            closeConnections();
         }
 
     }
 
     public void dropUsersTable() {
-        conn = Util.getConnect();
+        conn = Util.getConnection();
         statement = Util.getStatement(conn);
 
         try {
@@ -41,14 +41,14 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            Util.connectClose(statement, conn);
+            closeConnections();
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
 
         try {
-            conn = Util.getConnect();
+            conn = Util.getConnection();
             pstatment = conn.prepareStatement("INSERT INTO user (name, lastName, age) VALUES (?,?,?)");
             pstatment.setString(1, name);
             pstatment.setString(2, lastName);
@@ -58,20 +58,20 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            Util.connectClose(pstatment, conn);
+            closeConnections();
         }
     }
 
     public void removeUserById(long id) {
         try {
-            conn = Util.getConnect();
+            conn = Util.getConnection();
             pstatment = conn.prepareStatement("delete from user where id = ?");
             pstatment.setLong(1, id);
             pstatment.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            Util.connectClose(pstatment, conn);
+            closeConnections();
         }
     }
 
@@ -79,31 +79,31 @@ public class UserDaoJDBCImpl implements UserDao {
 
         List<User> myUsers = new ArrayList<>();
         User tmpUsr;
-        conn = Util.getConnect();
+        conn = Util.getConnection();
         statement = Util.getStatement(conn);
-        ResultSet rs= null;
 
         try {
-            rs = statement.executeQuery("select * from user");
 
-            while (rs.next()){
-                tmpUsr =new User(rs.getString("name"),
-                        rs.getString("lastName"),
-                        rs.getByte("age"));
-                tmpUsr.setId(rs.getLong("id"));
+            resultSet = statement.executeQuery("select * from user");
+
+            while (resultSet.next()) {
+                tmpUsr = new User(resultSet.getString("name"),
+                        resultSet.getString("lastName"),
+                        resultSet.getByte("age"));
+                tmpUsr.setId(resultSet.getLong("id"));
                 myUsers.add(tmpUsr);
             }
-
+            System.out.println();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-             Util.connectClose(statement, conn, rs);
+            closeConnections();
         }
         return myUsers;
     }
 
     public void cleanUsersTable() {
-        conn = Util.getConnect();
+        conn = Util.getConnection();
         statement = Util.getStatement(conn);
 
         try {
@@ -111,8 +111,51 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            Util.connectClose(statement, conn);
+            closeConnections();
         }
+    }
+
+    private void closeConnections() {
+
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+
+                try {
+                    if (pstatment != null) {
+                        pstatment.close();
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } finally {
+
+                    if (conn != null) {
+                        try {
+                            conn.close();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }
+
+        resultSet = null;
+        pstatment = null;
+        statement = null;
+        conn = null;
     }
 
 }
