@@ -20,12 +20,5 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
-    public static Statement getStatement(Connection conn) {
-        try {
-            return conn.createStatement();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

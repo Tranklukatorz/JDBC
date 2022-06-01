@@ -17,8 +17,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
 
         conn = Util.getConnection();
-        statement = Util.getStatement(conn);
         try {
+            statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS User (" +
                     "id BIGINT unsigned not null auto_increment  PRIMARY KEY," +
                     "name varchar(25) not null," +
@@ -27,28 +27,65 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeConnections();
-        }
 
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    statement = null;
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    conn = null;
+                }
+            }
+        }
     }
 
     public void dropUsersTable() {
         conn = Util.getConnection();
-        statement = Util.getStatement(conn);
 
         try {
+            statement = conn.createStatement();
             statement.execute("drop table if exists User");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeConnections();
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    statement = null;
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    conn = null;
+                }
+            }
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
+        conn = Util.getConnection();
 
         try {
-            conn = Util.getConnection();
             pstatment = conn.prepareStatement("INSERT INTO user (name, lastName, age) VALUES (?,?,?)");
             pstatment.setString(1, name);
             pstatment.setString(2, lastName);
@@ -58,20 +95,59 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeConnections();
+
+            if (pstatment != null) {
+                try {
+                    pstatment.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    pstatment = null;
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    conn = null;
+                }
+            }
         }
     }
 
     public void removeUserById(long id) {
+        conn = Util.getConnection();
+
         try {
-            conn = Util.getConnection();
             pstatment = conn.prepareStatement("delete from user where id = ?");
             pstatment.setLong(1, id);
             pstatment.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeConnections();
+
+            if (pstatment != null) {
+                try {
+                    pstatment.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    pstatment = null;
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    conn = null;
+                }
+            }
         }
     }
 
@@ -79,11 +155,10 @@ public class UserDaoJDBCImpl implements UserDao {
 
         List<User> myUsers = new ArrayList<>();
         User tmpUsr;
-        conn = Util.getConnection();
-        statement = Util.getStatement(conn);
+       conn = Util.getConnection();
 
         try {
-
+            statement = conn.createStatement();
             resultSet = statement.executeQuery("select * from user");
 
             while (resultSet.next()) {
@@ -97,65 +172,70 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeConnections();
+
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    resultSet = null;
+                }
+            }
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    statement = null;
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    conn = null;
+                }
+            }
         }
         return myUsers;
     }
 
     public void cleanUsersTable() {
         conn = Util.getConnection();
-        statement = Util.getStatement(conn);
 
         try {
+            statement = conn.createStatement();
             statement.execute("TRUNCATE TABLE user");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            closeConnections();
-        }
-    }
 
-    private void closeConnections() {
-
-        try {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } finally {
-
+            if (statement != null) {
                 try {
-                    if (pstatment != null) {
-                        pstatment.close();
-                    }
+                    statement.close();
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                } finally {
 
-                    if (conn != null) {
-                        try {
-                            conn.close();
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
+                } finally {
+                    statement = null;
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+
+                } finally {
+                    conn = null;
                 }
             }
         }
-
-        resultSet = null;
-        pstatment = null;
-        statement = null;
-        conn = null;
     }
 
 }
