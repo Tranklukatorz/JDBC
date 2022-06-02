@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
-    private Connection conn;
+    private Connection connection;
     private Statement statement;
     private PreparedStatement pstatment;
     private ResultSet resultSet;
@@ -16,9 +16,9 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
 
-        conn = Util.getConnection();
+        connection = Util.getConnection();
         try {
-            statement = conn.createStatement();
+            statement = connection.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS User (" +
                     "id BIGINT unsigned not null auto_increment  PRIMARY KEY," +
                     "name varchar(25) not null," +
@@ -38,23 +38,23 @@ public class UserDaoJDBCImpl implements UserDao {
                 }
             }
 
-            if (conn != null) {
+            if (connection != null) {
                 try {
-                    conn.close();
+                    connection.close();
                 } catch (SQLException e) {
 
                 } finally {
-                    conn = null;
+                    connection = null;
                 }
             }
         }
     }
 
     public void dropUsersTable() {
-        conn = Util.getConnection();
+        connection = Util.getConnection();
 
         try {
-            statement = conn.createStatement();
+            statement = connection.createStatement();
             statement.execute("drop table if exists User");
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -70,23 +70,23 @@ public class UserDaoJDBCImpl implements UserDao {
                 }
             }
 
-            if (conn != null) {
+            if (connection != null) {
                 try {
-                    conn.close();
+                    connection.close();
                 } catch (SQLException e) {
 
                 } finally {
-                    conn = null;
+                    connection = null;
                 }
             }
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        conn = Util.getConnection();
+        connection = Util.getConnection();
 
         try {
-            pstatment = conn.prepareStatement("INSERT INTO user (name, lastName, age) VALUES (?,?,?)");
+            pstatment = connection.prepareStatement("INSERT INTO user (name, lastName, age) VALUES (?,?,?)");
             pstatment.setString(1, name);
             pstatment.setString(2, lastName);
             pstatment.setByte(3, age);
@@ -106,23 +106,23 @@ public class UserDaoJDBCImpl implements UserDao {
                 }
             }
 
-            if (conn != null) {
+            if (connection != null) {
                 try {
-                    conn.close();
+                    connection.close();
                 } catch (SQLException e) {
 
                 } finally {
-                    conn = null;
+                    connection = null;
                 }
             }
         }
     }
 
     public void removeUserById(long id) {
-        conn = Util.getConnection();
+        connection = Util.getConnection();
 
         try {
-            pstatment = conn.prepareStatement("delete from user where id = ?");
+            pstatment = connection.prepareStatement("delete from user where id = ?");
             pstatment.setLong(1, id);
             pstatment.executeUpdate();
         } catch (SQLException e) {
@@ -139,13 +139,13 @@ public class UserDaoJDBCImpl implements UserDao {
                 }
             }
 
-            if (conn != null) {
+            if (connection != null) {
                 try {
-                    conn.close();
+                    connection.close();
                 } catch (SQLException e) {
 
                 } finally {
-                    conn = null;
+                    connection = null;
                 }
             }
         }
@@ -155,10 +155,10 @@ public class UserDaoJDBCImpl implements UserDao {
 
         List<User> myUsers = new ArrayList<>();
         User tmpUsr;
-       conn = Util.getConnection();
+       connection = Util.getConnection();
 
         try {
-            statement = conn.createStatement();
+            statement = connection.createStatement();
             resultSet = statement.executeQuery("select * from user");
 
             while (resultSet.next()) {
@@ -193,13 +193,13 @@ public class UserDaoJDBCImpl implements UserDao {
                 }
             }
 
-            if (conn != null) {
+            if (connection != null) {
                 try {
-                    conn.close();
+                    connection.close();
                 } catch (SQLException e) {
 
                 } finally {
-                    conn = null;
+                    connection = null;
                 }
             }
         }
@@ -207,10 +207,10 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        conn = Util.getConnection();
+        connection = Util.getConnection();
 
         try {
-            statement = conn.createStatement();
+            statement = connection.createStatement();
             statement.execute("TRUNCATE TABLE user");
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -226,13 +226,13 @@ public class UserDaoJDBCImpl implements UserDao {
                 }
             }
 
-            if (conn != null) {
+            if (connection != null) {
                 try {
-                    conn.close();
+                    connection.close();
                 } catch (SQLException e) {
 
                 } finally {
-                    conn = null;
+                    connection = null;
                 }
             }
         }
